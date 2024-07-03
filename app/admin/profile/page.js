@@ -13,7 +13,7 @@ import { ToastContainer, toast } from "react-toastify";
 // import ListPagination from "@/components/common/pagination";
 // import { UserDetailModal } from "@/components/common/userDetailModal";
 import Cookies from "js-cookie";
-export default function User() {
+export default function Profile() {
 //   const roleData = Cookies.get("roles") ?? "";
 //   const name = Cookies.get("name");
 //   const roles = roleData && JSON.parse(roleData);
@@ -102,7 +102,7 @@ export default function User() {
     <section>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
-          Users
+          Profile
         </h1>
         <div className="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
           <div>
@@ -112,7 +112,7 @@ export default function User() {
                 className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
                 type="button"
               >
-                + Add Users
+                + Update Profile
               </button>
             </Link>
           </div>

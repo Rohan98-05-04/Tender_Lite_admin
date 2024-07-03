@@ -2,7 +2,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import 'react-toastify/dist/ReactToastify.min.css';
 import { ToastContainer } from "react-toastify";
-
+import "flowbite"
+import Script from "next/script";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -12,9 +13,24 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
+    // <html lang="en">
+    //   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.7.2/font/bootstrap-icons.css" />
+    //   <body className={inter.className}>{children}</body>
+    //   <ToastContainer  autoClose={2000} />
+    // </html>
     <html lang="en">
+      <head>
+      <link href="https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.css"  rel="stylesheet" />
+      </head>
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.7.2/font/bootstrap-icons.css" />
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>{children}
+      {/* <Script src="https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.js"
+      strategy="afterInteractive"
+      /> */}
+      {/* <Script src="../path/to/flowbite/dist/flowbite.min.js"></Script> */}
+      <Script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></Script>
+
+      </body>
       <ToastContainer  autoClose={2000} />
     </html>
   );

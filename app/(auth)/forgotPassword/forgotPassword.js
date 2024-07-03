@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 // import { loginUser } from "@/api-functions/auth/authAction";
 // import CommonLoader from "@/components/common/commonLoader/commonLoader";
-export default function Login() {
+export default function ForgotPassword() {
   const router = useRouter();
   const [Mobile, setMobile] = useState("");
   const [Password, setPassword] = useState("");
@@ -55,9 +55,9 @@ const [isLoading, setIsLoading] = useState(false);
     // let res = await loginUser({ Mobile, Password });
 
     // if (res?.token) {
-      router.push("/admin/dashboard");
+    //   router.push("/dashboard");
     //   toast.success("LogIn Successfully");
-      // setIsLoading(false)
+      setIsLoading(false)
     // } else {
     //   toast.error(res?.errMessage);
     //   setIsLoading(false)
@@ -93,7 +93,7 @@ const [isLoading, setIsLoading] = useState(false);
         >
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-              Sign in to your account
+             Reset your Password
             </h1>
             <form onKeyDown={handleKeyPress} className="space-y-4 md:space-y-6">
               <div>
@@ -146,7 +146,7 @@ const [isLoading, setIsLoading] = useState(false);
               <div className="flex items-center justify-end">
                
                 <Link
-                  href="/auth/forgotPassword"
+                  href="/forgetPassword"
                   className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
                 >
                   Forgot password?
@@ -159,7 +159,7 @@ const [isLoading, setIsLoading] = useState(false);
               >
                 Sign in
               </button>
-              {/* <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+              <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                 Don’t have an account yet?{" "}
                 <Link
                   href="/signup"
@@ -167,7 +167,7 @@ const [isLoading, setIsLoading] = useState(false);
                 >
                   Sign up
                 </Link>
-              </p> */}
+              </p>
             </form>
           </div>
         </div>
