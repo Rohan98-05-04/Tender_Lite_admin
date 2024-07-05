@@ -5,8 +5,8 @@ import Styles from "./page.module.css";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
-// import { loginUser } from "@/api-functions/auth/authAction";
-// import CommonLoader from "@/components/common/commonLoader/commonLoader";
+import { LoginUser } from "@/apiFunction/auth/authApi";
+import Spinner from "@/components/common/spinner/spinner";
 export default function Login() {
   const router = useRouter();
   const [Mobile, setMobile] = useState("");
@@ -29,40 +29,44 @@ const [isLoading, setIsLoading] = useState(false);
   };
   const login = async () => {
     
-    // // Check if the field is empty
-    // if (Mobile === "") {
-    //   toast.error("Phone number cannot be empty");
-    //   return false;
-    // }
+    // Check if the field is empty
+    if (Mobile === "") {
+      toast.error("Phone number cannot be empty");
+      return false;
+    }
 
-    // // Check if the number has exactly 10 digits
-    // if (!/^\d{10}$/.test(Mobile)) {
-    //   toast.error("Phone number must be 10 digits long");
-    //   return false;
-    // }
+    // Check if the number has exactly 10 digits
+    if (!/^\d{10}$/.test(Mobile)) {
+      toast.error("Phone number must be 10 digits long");
+      return false;
+    }
 
-    // // Check if the number starts with 9, 8, or 7
-    // if (!/^[789]/.test(Mobile)) {
-    //   toast.error("Phone number must start with 9, 8, or 7");
-    //   return false;
-    // }
-    // // Validate Password
-    // if (Password.length < 5) {
-    //   toast.error("Password must be at least 5 characters long");
-    //   return false;
-    // }
-    // setIsLoading(true)
-    // let res = await loginUser({ Mobile, Password });
+    // Check if the number starts with 9, 8, or 7
+    if (!/^[789]/.test(Mobile)) {
+      toast.error("Phone number must start with 9, 8, or 7");
+      return false;
+    }
+    // Validate Password
+    if (Password.length < 5) {
+      toast.error("Password must be at least 5 characters long");
+      return false;
+    }
+    setIsLoading(true)
+    const loginData={
+      phone:Mobile,
+      password:Password
+    }
+    let res = await LoginUser(loginData);
 
-    // if (res?.token) {
+    if (res?.token) {
       router.push("/admin/dashboard");
-    //   toast.success("LogIn Successfully");
-      // setIsLoading(false)
-    // } else {
-    //   toast.error(res?.errMessage);
-    //   setIsLoading(false)
-    //   return;
-    // }
+      toast.success("LogIn Successfully");
+      setIsLoading(false)
+    } else {
+      toast.error(res?.errMessage);
+      setIsLoading(false)
+      return;
+    }
   };
   const handelPasswordShow=()=>{
     if(!passwordShow){
@@ -76,7 +80,7 @@ const [isLoading, setIsLoading] = useState(false);
     <section
       className={` ${Styles.loginMain} bg-gray-50 dark:bg-gray-900 h-100`}
     >
-      {/* {isLoading && <CommonLoader />} */}
+      {isLoading && <Spinner />}
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         {/* <a
           href="#"
@@ -143,7 +147,7 @@ const [isLoading, setIsLoading] = useState(false);
                 </div>
              
               </div>
-              <div className="flex items-center justify-end">
+              {/* <div className="flex items-center justify-end">
                
                 <Link
                   href="/auth/forgotPassword"
@@ -151,7 +155,7 @@ const [isLoading, setIsLoading] = useState(false);
                 >
                   Forgot password?
                 </Link>
-              </div>
+              </div> */}
               <button
                 onClick={login}
                 type="button"

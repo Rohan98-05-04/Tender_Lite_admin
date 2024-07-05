@@ -5,9 +5,11 @@ import Styles from "../common/sidebar.module.css";
 import { usePathname } from "next/navigation";
 import { initFlowbite } from "flowbite";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
+
 export default function SidebarComp({ children }) {
   const pathname = usePathname();
-
+const router=useRouter()
   const firstName = Cookies.get("firstName");
   const lastName = Cookies.get("lastName");
   const email = Cookies.get("email");
@@ -22,6 +24,10 @@ export default function SidebarComp({ children }) {
   useEffect(() => {
     initFlowbite(); // Call initCarousels() when component mounts
   }, []);
+  const logOut=()=>{
+    Cookies.remove("token");
+   
+  }
   return (
     <>
       <button
@@ -137,9 +143,9 @@ export default function SidebarComp({ children }) {
                   <path
                     d="M8 13H6M7 12V14M7 12V10M7 12H9M15.5 11.25V11.26M18.5 11.25V11.26M17 9.75V9.76M17 12.75V12.76M5.96 4C3.96 4 2 5.56 2 7.93V7.93C2 9.07 2.36 10.18 3.02 11.06L4.1 12.55C4.42 13 4.83 13.36 5.3 13.61L6.13 14.04C7.28 14.62 8.67 14.29 9.39 13.23L10.22 12C10.5 11.6 10.98 11.36 11.5 11.36H12.5C13.02 11.36 13.5 11.6 13.78 12L14.61 13.23C15.33 14.29 16.72 14.62 17.87 14.04L18.7 13.61C19.17 13.36 19.58 13 19.9 12.55L20.98 11.06C21.64 10.18 22 9.07 22 7.93V7.93C22 5.56 20.04 4 18.04 4H5.96Z"
                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                   strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
 
@@ -148,17 +154,17 @@ export default function SidebarComp({ children }) {
             </li>
             <li>
               <Link
-                href="/admin/coachProfile"
-                onClick={() => handleTabClick("/admin/coachProfile")}
+                href="/admin/coupan"
+                onClick={() => handleTabClick("/admin/coupan")}
                 className={` ${
-                  activeTab?.includes("coachProfile")
+                  activeTab?.includes("coupan")
                     ? Styles.activeTab
                     : Styles.inactiveTab
                 } flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group`}
               >
                 <svg
                   className={`${
-                    activeTab?.includes("coachProfile") ? "" : Styles.inactiveTab
+                    activeTab?.includes("coupan") ? "" : Styles.inactiveTab
                   } ${
                     Styles.tabSvg
                   } flex-shrink-0 w-5 h-5 text-gray-900 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-black`}
@@ -178,42 +184,41 @@ export default function SidebarComp({ children }) {
 
                 
                 <span className={` flex-1 ms-3 whitespace-nowrap`}>
-                  Coach Profile
+                  Coupon
                 </span>
               </Link>
             </li>
             <li>
               <Link
-                href="/admin/profile"
-                onClick={() => handleTabClick("/admin/profile")}
+                href="/admin/liveGames"
+                onClick={() => handleTabClick("/admin/liveGames")}
                 className={` ${
-                  activeTab?.includes("profile")
+                  activeTab?.includes("liveGames")
                     ? Styles.activeTab
                     : Styles.inactiveTab
                 } flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group`}
               >
-                <svg
+                 <svg
                   className={`${
-                    activeTab?.includes("profile") ? "" : Styles.inactiveTab
+                    activeTab?.includes("liveGames") ? "" : Styles.inactiveTab
                   } ${
                     Styles.tabSvg
                   } flex-shrink-0 w-5 h-5 text-gray-900 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-black`}
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
                   viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    stroke="currentColor"
+                    d="M8 13H6M7 12V14M7 12V10M7 12H9M15.5 11.25V11.26M18.5 11.25V11.26M17 9.75V9.76M17 12.75V12.76M5.96 4C3.96 4 2 5.56 2 7.93V7.93C2 9.07 2.36 10.18 3.02 11.06L4.1 12.55C4.42 13 4.83 13.36 5.3 13.61L6.13 14.04C7.28 14.62 8.67 14.29 9.39 13.23L10.22 12C10.5 11.6 10.98 11.36 11.5 11.36H12.5C13.02 11.36 13.5 11.6 13.78 12L14.61 13.23C15.33 14.29 16.72 14.62 17.87 14.04L18.7 13.61C19.17 13.36 19.58 13 19.9 12.55L20.98 11.06C21.64 10.18 22 9.07 22 7.93V7.93C22 5.56 20.04 4 18.04 4H5.96Z"
+                   stroke="currentColor"
+                    strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5zM4 22c0-2.652 1.053-5.195 2.928-7.071C8.804 13.053 11.348 12 14 12s5.196 1.053 7.071 2.928C21.947 16.804 23 19.348 23 22H4z"
                   />
                 </svg>
 
                 <span className={` flex-1 ms-3 whitespace-nowrap`}>
-                  Profile
+                  Live Games
                 </span>
               </Link>
             </li>
@@ -418,6 +423,7 @@ export default function SidebarComp({ children }) {
                     </li>
                     <li>
                       <a
+                      onClick={logOut}
                         href="/"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                       >

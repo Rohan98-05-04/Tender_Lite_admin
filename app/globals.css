@@ -28,7 +28,10 @@
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb)); */
-
+.tableFirstRow{
+  background-color: #1e293b !important;
+  color: white !important;
+}
 
 @layer utilities {
   .text-balance {
