@@ -2,16 +2,9 @@
 
 import Link from "next/link";
 // import Switch from "react-switch";
-//import Spinner from "@/components/common/loading";
-//import Pagination from "@/components/common/pagination";
-//import Popup from "@/components/common/popup";
 import { useEffect, useRef, useState } from "react";
 import { GetAllUserApi } from "@/apiFunction/users/userApi";
-// import { deleteUser } from "@/apiFunction/userApi/userApi";
 import { ToastContainer, toast } from "react-toastify";
-// import DeleteModal from "@/components/common/deleteModal";
-// import ListPagination from "@/components/common/pagination";
-// import { UserDetailModal } from "@/components/common/userDetailModal";
 import Cookies from "js-cookie";
 import SearchInput from "@/components/common/debounceSearchInput/debounceSearchInput";
 import FilterDropdown from "@/components/common/filterDropdown/filterDropdown";
@@ -19,6 +12,8 @@ import Spinner from "@/components/common/spinner/spinner";
 import Pagination from "@/components/common/pagination/pagination";
 import { list } from "postcss";
 import BigNoDataFound from "@/components/common/noDataFound/noDataFound";
+import DeleteModal from "@/components/common/deleteModal/deleteModal";
+import { DeleteUser } from "@/apiFunction/users/userApi";
 export default function User() {
   //   const roleData = Cookies.get("roles") ?? "";
   //   const name = Cookies.get("name");
@@ -36,24 +31,25 @@ export default function User() {
   const [isLoading, setIsLoading] = useState(false);
 
   const userType = ["Player", "Coach"];
-  console.log("listData", listData);
 
   useEffect(() => {
-    getAllUsers();
-  }, [page, searchData, isRefresh, filterType]);
-  const getAllUsers = async () => {
     setIsLoading(true);
-    let users = await GetAllUserApi(page, searchData, filterType);
-    if (!users?.resData?.message) {
-      setListData(users?.resData);
-      setIsLoading(false);
-      return false;
-    } else {
-      toast.error(users?.message);
-      setIsLoading(false);
-      return false;
-    }
-  };
+    const getAllUsers = async () => {
+     
+      let users = await GetAllUserApi(page, searchData, filterType);
+      if (!users?.resData?.message) {
+        setListData(users?.resData);
+        setIsLoading(false);
+        return false;
+      } else {
+        toast.error(users?.message);
+        setIsLoading(false);
+        return false;
+      }
+    };
+    getAllUsers();
+  },[page, searchData, isRefresh, filterType]);
+ 
 
   const searchInputChange = (e) => {
     setSearchData(e);
@@ -64,41 +60,46 @@ export default function User() {
   };
 
   const handleDelete = async () => {
+    setIsLoading(true);
     try {
-      const res = await deleteUser(deleteId);
+      const res = await DeleteUser(deleteId);
       console.log("delete response", res);
-      if (res.resData.message == "User deleted successfully") {
-        toast.success("User deleted successfully");
+      if (res.resData.success) {
+        toast.success(res?.resData?.message);
         setIsPopupOpen(false); // Close the modal
-        getAllUsers();
+        setIsLoading(false);
+        setIsRefresh((prev) => prev + 1);
+        
       } else {
-        toast.error(res?.message || "Error deleting user");
+        toast.error(res?.resData?.message || "Error deleting user");
+        setIsLoading(false);
       }
     } catch (error) {
-      toast.error("Failed to delete category");
+      toast.error("Failed to delete user");
+      setIsLoading(false);
     }
   };
 
-  const toggleChange = async (id, isActive) => {
-    console.log("toggle change id", id);
-    const payload = {
-      IsActive: !isActive,
-    };
-    let users = await updateUser(payload, id);
-    console.log("toggle Users", users);
-    if (!users?.resData?.message) {
-      setIsRefresh((prev) => prev + 1);
-      return false;
-    } else {
-      toast.error(users?.message);
-      return false;
-    }
-  };
+  // const toggleChange = async (id, isActive) => {
+  //   console.log("toggle change id", id);
+  //   const payload = {
+  //     IsActive: !isActive,
+  //   };
+  //   let users = await updateUser(payload, id);
+  //   console.log("toggle Users", users);
+  //   if (!users?.resData?.message) {
+  //     setIsRefresh((prev) => prev + 1);
+  //     return false;
+  //   } else {
+  //     toast.error(users?.message);
+  //     return false;
+  //   }
+  // };
 
-  const OpenUserModal = (id) => {
-    setOpenUserModal(true);
-    setModalUserId(id);
-  };
+  // const OpenUserModal = (id) => {
+  //   setOpenUserModal(true);
+  //   setModalUserId(id);
+  // };
 
   const handleCancel = () => {
     setDeleteId("");
@@ -108,8 +109,6 @@ export default function User() {
     setDeleteId(id);
     setIsPopupOpen(true);
   };
-
-  console.log("filter type", filterType);
   return (
     <section>
       {isLoading && <Spinner />}
@@ -119,7 +118,7 @@ export default function User() {
         </h1>
         <div className="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-end pb-4">
           {/* <div>
-            <Link href={"/admin/users/addUser"}>
+            <Link href={"/admin/users/userDetails/1234587asd"}>
               {" "}
               <button
                 className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
@@ -145,7 +144,7 @@ export default function User() {
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr className="tableFirstRow">
                   <th scope="col" className="px-6 py-3">
-                    Name
+                   User Name
                   </th>
                   <th scope="col" className="px-6 py-3">
                     Type
@@ -169,47 +168,21 @@ export default function User() {
                         key={index}
                         className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                       >
-                        <td
-                          className="px-6 py-4 cursor-pointer"
-                          onClick={() =>
-                            item?.Role?.Name === "Retailer" &&
-                            OpenUserModal(item.UserId)
-                          }
-                          style={{
-                            color:
-                              item?.Role?.Name === "Retailer"
-                                ? "blue"
-                                : "inherit",
-                          }}
-                        >
-                          {item?.FirstName}
-                        </td>
-                        <td className="px-6 py-4">{item?.Role?.Name}</td>
-                        <td className="px-6 py-4">{item?.Phone}</td>
-                        <td className="px-6 py-4">{item?.Email}</td>
+                        <td className="px-6 py-4">{item?.user_name}</td>
+                        <td className="px-6 py-4">{item?.userType}</td>
+                        <td className="px-6 py-4">{item?.phone}</td>
+                        <td className="px-6 py-4">{item?.email}</td>
                         <td className="px-6 py-4">
                           <div className="flex items-center space-x-2">
-                            {item?.IsActive ? (
-                              <Link
-                                href={`/admin/users/updateUser/${item.UserId}`}
-                                className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                              >
-                                <i
-                                  className="bi bi-pencil-square"
-                                  style={{ fontSize: "1.5em" }}
-                                ></i>
-                              </Link>
-                            ) : (
-                              <button
-                                disabled
-                                className="font-medium text-gray-400 dark:text-gray-500 cursor-not-allowed"
-                              >
-                                <i
-                                  className="bi bi-pencil-square"
-                                  style={{ fontSize: "1.5em" }}
-                                ></i>
-                              </button>
-                            )}
+                            <Link
+                              href={`/admin/users/userDetails/${item._id}`}
+                              className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                            >
+                              <i
+                                className="bi bi-eye-fill"
+                                style={{ fontSize: "1.5em" }}
+                              ></i>
+                            </Link>
 
                             {/* <Switch
                     onChange={() => toggleChange(item?.UserId, item?.IsActive)}
@@ -221,7 +194,7 @@ export default function User() {
                               className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                             >
                               <i
-                                onClick={() => deleteUserModal(item.UserId)}
+                                onClick={() => deleteUserModal(item._id)}
                                 className="bi bi-trash-fill"
                                 style={{ color: "red", fontSize: "1.5em" }}
                               ></i>
@@ -244,14 +217,14 @@ export default function User() {
       <div className="mt-4">
         <Pagination data={listData} pageNo={handlePageChange} pageVal={page} />
       </div>
-      {/* <DeleteModal
+      <DeleteModal
         isOpen={isPopupOpen}
         title="Are you sure you want to delete this User ?"
         confirmLabel="Yes, I'm sure"
         cancelLabel="No, cancel"
         onConfirm={handleDelete}
         onCancel={handleCancel}
-      /> */}
+      />
       {/* <UserDetailModal
       modalValue = {openUserModal}
       setOpenUserModal = {setOpenUserModal}
